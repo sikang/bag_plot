@@ -7,7 +7,6 @@ On terminal:
 $rosrun bag_plot interface.py *.bag
 ```
 On GUI:
-----------------
 * Check topics to select corresponding msg
 * Check variables to select values to plot
 * Click Load to plot, the first time for load will take a while
