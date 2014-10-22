@@ -1,4 +1,4 @@
-bag_reader
+bag_plot
 ==========
 A python script for plotting ros bag file, replacement of [rxbag](http://wiki.ros.org/rxbag) for ros version higher than groovy
 Basic use instruction:
