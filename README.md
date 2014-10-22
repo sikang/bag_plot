@@ -1,5 +1,6 @@
 bag_reader
 ==========
+A python script for plotting ros bag file, replacement of [rxbag](http://wiki.ros.org/rxbag) for ros version higher than groovy
 Basic use instruction:
 --------------------
 On terminal:
@@ -20,3 +21,7 @@ Basic feature list:
 * Scroll up/down to scale in x dimension
 * Shift + Scroll up/down to scale in y dimension
  
+Msgs supported:
+------------------
+* nav_msgs/Odometry
+* quadrotor_msgs/Traj
