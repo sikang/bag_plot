@@ -9,7 +9,7 @@ import numpy as np
 from tf.transformations import euler_from_quaternion
 
 topic_type_dict = {}
-msg_types = ['nav_msgs/Odometry', 'quadrotor_msgs/Traj']
+msg_types = ['nav_msgs/Odometry', 'quadrotor_msgs/Traj', 'geometry_msgs/PoseStamped']
 var_types = ['x', 'y', 'z', 'vx', 'vy', 'vz', 'roll', 'pitch', 'yaw']
 
 def read_bag(bagfile):
@@ -32,12 +32,15 @@ def read_msg(topics):
                 data = update_odometry(data, topic, msg)
             elif topic_type_dict[topic] == 'quadrotor_msgs/Traj':
                 data = update_traj(data, topic, msg)
+            elif topic_type_dict[topic] == 'geometry_msgs/PoseStamped':
+                data = update_pose(data, topic, msg)
+
 
     return data
 
 def update_odometry(data, topic, msg):
        quat = [msg.pose.pose.orientation.x, msg.pose.pose.orientation.y,
-               msg.pose.pose.orientation.y, msg.pose.pose.orientation.w]
+               msg.pose.pose.orientation.z, msg.pose.pose.orientation.w]
        [r, p, y] = euler_from_quaternion(quat)
             
        if data.has_key(topic):
@@ -64,6 +67,31 @@ def update_odometry(data, topic, msg):
            data[topic]['yaw'] = np.array([y])
            data[topic]['t'] = np.array([msg.header.stamp.to_sec()])
        return data 
+
+def update_pose(data, topic, msg):
+       quat = [msg.pose.orientation.x, msg.pose.orientation.y,
+               msg.pose.orientation.z, msg.pose.orientation.w]
+       [r, p, y] = euler_from_quaternion(quat)
+            
+       if data.has_key(topic):
+           data[topic]['x'] = np.append(data[topic]['x'], msg.pose.position.x)
+           data[topic]['y'] = np.append(data[topic]['y'], msg.pose.position.y)
+           data[topic]['z'] = np.append(data[topic]['z'], msg.pose.position.z)
+           data[topic]['roll'] = np.append(data[topic]['roll'], r)
+           data[topic]['pitch'] = np.append(data[topic]['pitch'], p)
+           data[topic]['yaw'] = np.append(data[topic]['yaw'], y)
+           data[topic]['t'] = np.append(data[topic]['t'], msg.header.stamp.to_sec())
+       else:
+           data[topic] = {}
+           data[topic]['x'] = np.array([msg.pose.position.x])
+           data[topic]['y'] = np.array([msg.pose.position.y])
+           data[topic]['z'] = np.array([msg.pose.position.z])
+           data[topic]['roll'] = np.array([r])
+           data[topic]['pitch'] = np.array([p])
+           data[topic]['yaw'] = np.array([y])
+           data[topic]['t'] = np.array([msg.header.stamp.to_sec()])
+       return data 
+
 
 
 def update_traj(data, topic, msg):
