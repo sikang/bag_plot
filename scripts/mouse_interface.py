@@ -41,6 +41,7 @@ def plot_data(data, variables_selected, topics_selected):
         plt.ylabel(var)
         k += 1
         for topic in topics_selected:
+            if data[topic].has_key(var):
              ax[var].plot(data[topic]['t'], data[topic][var], label=topic+"/"+var)
              ax[var].legend()
         if not verticalLineX_ == None:

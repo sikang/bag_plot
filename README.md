@@ -24,4 +24,5 @@ Basic feature list:
 Msgs supported:
 ------------------
 * nav_msgs/Odometry
-* quadrotor_msgs/Traj
+* sensor_msgs/Imu
+* geometry_msgs/PoseStamped
