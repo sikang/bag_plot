@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+plt.rcParams['lines.linewidth'] = 3
 ax = {}
 
 o_X_ = {}
@@ -37,13 +38,13 @@ def plot_data(data, variables_selected, topics_selected):
         ax[var] = plt.subplot(n_plot, 1 , k)
         ax[var].hold(True)
         ax[var].grid(True)
-        plt.xlabel("time(s)")
-        plt.ylabel(var)
+        plt.xlabel("time(s)", fontsize=20)
+        plt.ylabel(var + "(m)", fontsize=20)
         k += 1
         for topic in topics_selected:
             if data[topic].has_key(var):
              ax[var].plot(data[topic]['t'], data[topic][var], label=topic+"/"+var)
-             ax[var].legend()
+             ax[var].legend(bbox_to_anchor=(0.3, 0.9))
         if not verticalLineX_ == None:
              drawVerticalLine(ax[var])
         if not cur_xlim_ == None:

@@ -9,8 +9,13 @@ import numpy as np
 from tf.transformations import euler_from_quaternion
 
 topic_type_dict = {}
-msg_types = ['nav_msgs/Odometry', 'sensor_msgs/Imu', 'geometry_msgs/PoseStamped']
-var_types = ['x', 'y', 'z', 'vx', 'vy', 'vz', 'roll', 'pitch', 'yaw', 'acc_x', 'acc_y', 'acc_z',
+msg_types = ['nav_msgs/Odometry', 'sensor_msgs/Imu', 'geometry_msgs/PoseStamped',
+        'quadrotor_msgs/PositionCommand', 'quadrotor_msgs/TRPYCommand',
+        'quadrotor_msgs/SO3Command', 'sensor_msgs/Range',
+        'geometry_msgs/PoseWithCovarianceStamped']
+var_types = ['x', 'y', 'z', 'vx', 'vy', 'vz', 
+        'acc_x', 'acc_y', 'acc_z',
+        'roll', 'pitch', 'yaw', 
         'ang_vel_x', 'ang_vel_y', 'ang_vel_z']
 
 def read_bag(bagfile):
@@ -34,8 +39,17 @@ def read_msg(topics):
             elif topic_type_dict[topic] == 'sensor_msgs/Imu':
                 data = update_imu(data, topic, msg)
             elif topic_type_dict[topic] == 'geometry_msgs/PoseStamped':
-                data = update_pose(data, topic, msg)
-
+                data = update_pose(data, topic, msg.pose, msg.header)
+            elif topic_type_dict[topic] == 'quadrotor_msgs/PositionCommand':
+                data = update_pose_cmd(data, topic, msg)
+            elif topic_type_dict[topic] == 'quadrotor_msgs/TRPYCommand':
+                data = update_trpy_cmd(data, topic, msg)
+            elif topic_type_dict[topic] == 'quadrotor_msgs/SO3Command':
+                data = update_so3_cmd(data, topic, msg)
+            elif topic_type_dict[topic] == 'sensor_msgs/Range':
+                data = update_range(data, topic, msg)
+            elif topic_type_dict[topic] == 'geometry_msgs/PoseWithCovarianceStamped':
+                data = update_pose(data, topic, msg.pose.pose, msg.header)
 
     return data
 
@@ -75,30 +89,30 @@ def update_odometry(data, topic, msg):
            data[topic]['t'] = np.array([msg.header.stamp.to_sec()])
        return data 
 
-def update_pose(data, topic, msg):
-       quat = [msg.pose.orientation.x, msg.pose.orientation.y,
-               msg.pose.orientation.z, msg.pose.orientation.w]
+def update_pose(data, topic, msg, header):
+       quat = [msg.orientation.x, msg.orientation.y,
+               msg.orientation.z, msg.orientation.w]
        [r, p, y] = euler_from_quaternion(quat)
-            
+
        if data.has_key(topic):
-           data[topic]['x'] = np.append(data[topic]['x'], msg.pose.position.x)
-           data[topic]['y'] = np.append(data[topic]['y'], msg.pose.position.y)
-           data[topic]['z'] = np.append(data[topic]['z'], msg.pose.position.z)
+           data[topic]['x'] = np.append(data[topic]['x'], msg.position.x)
+           data[topic]['y'] = np.append(data[topic]['y'], msg.position.y)
+           data[topic]['z'] = np.append(data[topic]['z'], msg.position.z)
            data[topic]['roll'] = np.append(data[topic]['roll'], r)
            data[topic]['pitch'] = np.append(data[topic]['pitch'], p)
            data[topic]['yaw'] = np.append(data[topic]['yaw'], y)
-           data[topic]['t'] = np.append(data[topic]['t'], msg.header.stamp.to_sec())
+           data[topic]['t'] = np.append(data[topic]['t'], header.stamp.to_sec())
        else:
            data[topic] = {}
-           data[topic]['x'] = np.array([msg.pose.position.x])
-           data[topic]['y'] = np.array([msg.pose.position.y])
-           data[topic]['z'] = np.array([msg.pose.position.z])
+           data[topic]['x'] = np.array([msg.position.x])
+           data[topic]['y'] = np.array([msg.position.y])
+           data[topic]['z'] = np.array([msg.position.z])
            data[topic]['roll'] = np.array([r])
            data[topic]['pitch'] = np.array([p])
            data[topic]['yaw'] = np.array([y])
-           data[topic]['t'] = np.array([msg.header.stamp.to_sec()])
-       return data 
+           data[topic]['t'] = np.array([header.stamp.to_sec()])
 
+       return data 
 
 
 def update_imu(data, topic, msg):
@@ -130,6 +144,82 @@ def update_imu(data, topic, msg):
            data[topic]['yaw'] = np.array([y])
            data[topic]['t'] = np.array([msg.header.stamp.to_sec()])
        return data 
+
+def update_pose_cmd(data, topic, msg):
+       if data.has_key(topic):
+           data[topic]['x'] = np.append(data[topic]['x'], msg.position.x)
+           data[topic]['y'] = np.append(data[topic]['y'], msg.position.y)
+           data[topic]['z'] = np.append(data[topic]['z'], msg.position.z)
+           data[topic]['vx'] = np.append(data[topic]['vx'], msg.velocity.x)
+           data[topic]['vy'] = np.append(data[topic]['vy'], msg.velocity.y)
+           data[topic]['vz'] = np.append(data[topic]['vz'], msg.velocity.z)
+           data[topic]['acc_x'] = np.append(data[topic]['acc_x'], msg.acceleration.x)
+           data[topic]['acc_y'] = np.append(data[topic]['acc_y'], msg.acceleration.y)
+           data[topic]['acc_z'] = np.append(data[topic]['acc_z'], msg.acceleration.z)
+           data[topic]['yaw'] = np.append(data[topic]['yaw'], msg.yaw)
+           data[topic]['t'] = np.append(data[topic]['t'], msg.header.stamp.to_sec())
+       else:
+           data[topic] = {}
+           data[topic]['x'] = np.array([msg.position.x])
+           data[topic]['y'] = np.array([msg.position.y])
+           data[topic]['z'] = np.array([msg.position.z])
+           data[topic]['vx'] = np.array([msg.velocity.x])
+           data[topic]['vy'] = np.array([msg.velocity.y])
+           data[topic]['vz'] = np.array([msg.velocity.z])
+           data[topic]['acc_x'] = np.array([msg.acceleration.x])
+           data[topic]['acc_y'] = np.array([msg.acceleration.y])
+           data[topic]['acc_z'] = np.array([msg.acceleration.z])
+           data[topic]['yaw'] = np.array([msg.yaw])
+           data[topic]['t'] = np.array([msg.header.stamp.to_sec()])
+       return data 
+
+
+def update_trpy_cmd(data, topic, msg):
+       if data.has_key(topic):
+           data[topic]['roll'] = np.append(data[topic]['roll'], msg.roll)
+           data[topic]['pitch'] = np.append(data[topic]['pitch'], msg.pitch)
+           data[topic]['yaw'] = np.append(data[topic]['yaw'], msg.yaw)
+           data[topic]['t'] = np.append(data[topic]['t'], msg.header.stamp.to_sec())
+       else:
+           data[topic] = {}
+           data[topic]['roll'] = np.array([msg.roll])
+           data[topic]['pitch'] = np.array([msg.pitch])
+           data[topic]['yaw'] = np.array([msg.yaw])
+           data[topic]['t'] = np.array([msg.header.stamp.to_sec()])
+       return data 
+
+def update_so3_cmd(data, topic, msg):
+       quat = [msg.orientation.x, msg.orientation.y,
+            msg.orientation.z, msg.orientation.w]
+       [r, p, y] = euler_from_quaternion(quat)
+
+       if data.has_key(topic):
+           data[topic]['yaw'] = np.append(data[topic]['yaw'], y)
+           data[topic]['ang_vel_x'] = np.append(data[topic]['ang_vel_x'], msg.angular_velocity.x)
+           data[topic]['ang_vel_y'] = np.append(data[topic]['ang_vel_y'], msg.angular_velocity.y)
+           data[topic]['ang_vel_z'] = np.append(data[topic]['ang_vel_z'], msg.angular_velocity.z)
+           data[topic]['t'] = np.append(data[topic]['t'], msg.header.stamp.to_sec())
+       else:
+           data[topic] = {}
+           data[topic]['yaw'] = np.array([y])
+           data[topic]['ang_vel_x'] = np.array(msg.angular_velocity.x)
+           data[topic]['ang_vel_y'] = np.array(msg.angular_velocity.y)
+           data[topic]['ang_vel_z'] = np.array(msg.angular_velocity.z)
+           data[topic]['t'] = np.array([msg.header.stamp.to_sec()])
+       return data 
+
+def update_range(data, topic, msg):
+       if data.has_key(topic):
+           data[topic]['z'] = np.append(data[topic]['z'], msg.range)
+           data[topic]['t'] = np.append(data[topic]['t'], msg.header.stamp.to_sec())
+       else:
+           data[topic] = {}
+           data[topic]['z'] = np.array([msg.range])
+           data[topic]['t'] = np.array([msg.header.stamp.to_sec()])
+       return data 
+
+
+    
 
 if __name__ == "__main__":
     read_topic_type()
