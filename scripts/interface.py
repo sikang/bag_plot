@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 import time
 import sys
@@ -29,7 +29,7 @@ class Example(QtGui.QWidget):
         vbox_left = {}
         label_left = {}
         topic_type_dict = bag_reader.read_bag(sys.argv[1])
-        
+
         for msg_type in topic_type_dict.values():
             if bag_reader.msg_types.count(msg_type) and not has_type.count(msg_type):
                 has_type.append(msg_type)
@@ -54,16 +54,16 @@ class Example(QtGui.QWidget):
             vbox_left[msg_type].addStretch(1)
             frame_left[msg_type].setLayout(vbox_left[msg_type])
             splitter_left.addWidget(frame_left[msg_type])
-     
+
         vbox_left_var = QtGui.QVBoxLayout(self)
         label_left_var = QtGui.QLabel(self)
         label_left_var.setText('Variables')
         label_left_var.adjustSize()
         vbox_left_var.addWidget(label_left_var)
-          
+
         frame_left_var = QtGui.QFrame(self)
         frame_left_var.setFrameShape(QtGui.QFrame.StyledPanel)
-        
+
         for var in bag_reader.var_types:
             cb = QtGui.QCheckBox(var, self)
             cb.stateChanged.connect(self.addVar)
@@ -83,9 +83,9 @@ class Example(QtGui.QWidget):
         vbox_left_control.addWidget(load_btn)
         vbox_left_control.addWidget(clear_btn)
         vbox_left_control.addStretch(1)
-        frame_left_control.setLayout(vbox_left_control) 
+        frame_left_control.setLayout(vbox_left_control)
         splitter_left.addWidget(frame_left_control)
- 
+
 
         frame_right = QtGui.QFrame(self)
         frame_right.setFrameShape(QtGui.QFrame.StyledPanel)
@@ -97,7 +97,7 @@ class Example(QtGui.QWidget):
 
         hbox = QtGui.QHBoxLayout(self)
         hbox.addWidget(splitter_v)
-       
+
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
         vbox_right = QtGui.QVBoxLayout(self)
@@ -120,7 +120,7 @@ class Example(QtGui.QWidget):
                 if not topics_to_read.count(topic):
                    topics_to_read.append(topic)
         return topics_to_read
-       
+
 
     def plot(self):
         new_data = bag_reader.read_msg(self.topics_to_read())
@@ -151,7 +151,7 @@ class Example(QtGui.QWidget):
 
     def buttonClearClicked(self):
         mouse_interface.clear()
-        
+
 
     def buttonClicked(self):
         self.plot()
@@ -170,7 +170,7 @@ class Example(QtGui.QWidget):
             mouse_interface.shift_hold = False
 
     def center(self):
-        
+
         qr = self.frameGeometry()
         cp = QtGui.QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
@@ -178,7 +178,7 @@ class Example(QtGui.QWidget):
 
 #    def closeEvent(self, event):
 #        reply = QtGui.QMessageBox.question(self, 'Message',
-#                "Are you sure to quit?", QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, 
+#                "Are you sure to quit?", QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
 #                QtGui.QMessageBox.No)
 #        if reply == QtGui.QMessageBox.Yes:
 #            event.accept()
@@ -187,9 +187,12 @@ class Example(QtGui.QWidget):
 
 def main():
     app = QtGui.QApplication(sys.argv)
+    if(len(sys.argv) < 2):
+        print 'Usage:',sys.argv[0],' <bag_file>'
+        sys.exit(1)
     ex = Example()
     sys.exit(app.exec_())
-    
+
 
 if __name__ == "__main__":
     main()
