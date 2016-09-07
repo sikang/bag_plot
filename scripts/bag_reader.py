@@ -1,11 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 import rosbag
 import rospy
 import yaml
 import numpy as np
 
-#from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
 
 topic_type_dict = {}
@@ -13,9 +12,9 @@ msg_types = ['nav_msgs/Odometry', 'sensor_msgs/Imu', 'geometry_msgs/PoseStamped'
         'quadrotor_msgs/PositionCommand', 'quadrotor_msgs/TRPYCommand',
         'quadrotor_msgs/SO3Command', 'sensor_msgs/Range',
         'geometry_msgs/PoseWithCovarianceStamped']
-var_types = ['x', 'y', 'z', 'vx', 'vy', 'vz', 
+var_types = ['x', 'y', 'z', 'vx', 'vy', 'vz',
         'acc_x', 'acc_y', 'acc_z',
-        'roll', 'pitch', 'yaw', 
+        'roll', 'pitch', 'yaw',
         'ang_vel_x', 'ang_vel_y', 'ang_vel_z']
 
 def read_bag(bagfile):
@@ -199,6 +198,9 @@ def update_so3_cmd(data, topic, msg):
            data[topic]['ang_vel_y'] = np.append(data[topic]['ang_vel_y'], msg.angular_velocity.y)
            data[topic]['ang_vel_z'] = np.append(data[topic]['ang_vel_z'], msg.angular_velocity.z)
            data[topic]['t'] = np.append(data[topic]['t'], msg.header.stamp.to_sec())
+           data[topic]['roll'] = np.append(data[topic]['roll'], r)
+           data[topic]['pitch'] = np.append(data[topic]['pitch'], p)
+           data[topic]['yaw'] = np.append(data[topic]['yaw'], y)
        else:
            data[topic] = {}
            data[topic]['yaw'] = np.array([y])
@@ -206,7 +208,10 @@ def update_so3_cmd(data, topic, msg):
            data[topic]['ang_vel_y'] = np.array(msg.angular_velocity.y)
            data[topic]['ang_vel_z'] = np.array(msg.angular_velocity.z)
            data[topic]['t'] = np.array([msg.header.stamp.to_sec()])
-       return data 
+           data[topic]['roll'] = np.array([r])
+           data[topic]['pitch'] = np.array([p])
+           data[topic]['yaw'] = np.array([y])
+       return data
 
 def update_range(data, topic, msg):
        if data.has_key(topic):
@@ -216,10 +221,10 @@ def update_range(data, topic, msg):
            data[topic] = {}
            data[topic]['z'] = np.array([msg.range])
            data[topic]['t'] = np.array([msg.header.stamp.to_sec()])
-       return data 
+       return data
 
 
-    
+
 
 if __name__ == "__main__":
     read_topic_type()
