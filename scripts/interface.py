@@ -3,14 +3,15 @@
 import time
 import sys
 import bag_reader
-import mouse_interface
-
 import numpy as np
+from PyQt4 import QtGui, QtCore
+
+import matplotlib
+matplotlib.use('Qt4Agg')
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 
-from PyQt4 import QtGui, QtCore
+import mouse_interface
 
 data = {}
 topics_selected = []
