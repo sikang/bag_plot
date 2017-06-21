@@ -11,7 +11,7 @@ o_xlim_ = {}
 o_ylim_ = {}
 scalex_ = {}
 scaley_ = {}
-coords = {} 
+coords = {}
 prev_button_ = None
 shift_hold = False
 
@@ -36,20 +36,19 @@ def plot_data(data, variables_selected, topics_selected):
     k = 1
     for var in variables_selected:
         ax[var] = plt.subplot(n_plot, 1 , k)
-        ax[var].hold(True)
         ax[var].grid(True)
         plt.xlabel("time(s)", fontsize=20)
         plt.ylabel(var + "(m)", fontsize=20)
         k += 1
         for topic in topics_selected:
-            if data[topic].has_key(var):
+            if var in data[topic]:
              ax[var].plot(data[topic]['t'], data[topic][var], label=topic+"/"+var)
              ax[var].legend(bbox_to_anchor=(0.3, 0.9))
         if not verticalLineX_ == None:
              drawVerticalLine(ax[var])
         if not cur_xlim_ == None:
              drawZoomX(ax[var], cur_xlim_)
-        if cur_ylim_.has_key(var):
+        if var in cur_ylim_:
              drawZoomY(ax[var], cur_ylim_[var])
     fig.canvas.mpl_connect('button_press_event', onClick)
     fig.canvas.mpl_connect('scroll_event', reZoom)
@@ -92,7 +91,7 @@ def drawZoomX(axe, xlim):
 
 def drawZoomY(axe, ylim):
     axe.set_ylim(ylim)
-  
+
 
 def reZoom(event, base_factor = 1.5):
     global shift_hold
@@ -114,19 +113,19 @@ def reZoom(event, base_factor = 1.5):
              cur_ylim = axe.get_ylim()
              cur_yrange = (cur_ylim[1] - cur_ylim[0])*.5
              cur_y = event.ydata
- 
+
              axe.set_ylim([cur_y - cur_yrange * scale,
                       cur_y + cur_yrange * scale])
         else:
              cur_xlim = axe.get_xlim()
              cur_xrange = (cur_xlim[1] - cur_xlim[0])*.5
              cur_x = event.xdata
-    
+
              axe.set_xlim([cur_x - cur_xrange * scale,
                            cur_x + cur_xrange * scale])
         cur_xlim_ = axe.get_xlim()
         cur_ylim_[axe_id] = axe.get_ylim()
-    
+
     event.canvas.draw()
 
 def checkAxes(x, y, coords):
@@ -137,7 +136,7 @@ def checkAxes(x, y, coords):
         return False
 
 def dragZoom(event):
-    
+
     if event.inaxes and event.button == 1:
         global prev_button_
         global o_X_
@@ -152,11 +151,11 @@ def dragZoom(event):
             if not event.button == prev_button_:
                 o_xlim_[key] = axe.get_xlim()
                 o_ylim_[key] = axe.get_ylim()
-           
+
                 coords[key] = axe.transAxes.transform([(0,0), (1,1)])
                 scalex_[key] = (o_xlim_[key][1] - o_xlim_[key][0]) / (coords[key][1][0] - coords[key][0][0])
                 scaley_[key] = (o_ylim_[key][1] - o_ylim_[key][0]) / (coords[key][1][1] - coords[key][0][1])
- 
+
                 o_X_[key] = event.x
                 o_Y_[key] = event.y
                 continue
