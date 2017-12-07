@@ -79,10 +79,13 @@ class Example(QtGui.QWidget):
         vbox_left_control = QtGui.QVBoxLayout(self)
         load_btn = QtGui.QPushButton('Load', self)
         clear_btn = QtGui.QPushButton('Clear', self)
+        save_btn = QtGui.QPushButton('Save Figure', self)
         load_btn.clicked.connect(self.buttonClicked)
         clear_btn.clicked.connect(self.buttonClearClicked)
+        save_btn.clicked.connect(self.buttonSaveClicked)
         vbox_left_control.addWidget(load_btn)
         vbox_left_control.addWidget(clear_btn)
+        vbox_left_control.addWidget(save_btn)
         vbox_left_control.addStretch(1)
         frame_left_control.setLayout(vbox_left_control)
         splitter_left.addWidget(frame_left_control)
@@ -90,6 +93,8 @@ class Example(QtGui.QWidget):
 
         frame_right = QtGui.QFrame(self)
         frame_right.setFrameShape(QtGui.QFrame.StyledPanel)
+        #frame_right.setPaletteBackgroundColor(Qt::black);
+        #frame_right.setAutoFillBackground(True);
 
 
         splitter_v = QtGui.QSplitter(QtCore.Qt.Horizontal)
@@ -105,11 +110,13 @@ class Example(QtGui.QWidget):
         vbox_right.addWidget(self.canvas)
         frame_right.setLayout(vbox_right)
 
+
         self.setLayout(hbox)
         self.resize(1000, 800)
         self.center()
+        #self.setStyleSheet("background-color:black;");
 
-
+       
         self.show()
 
 
@@ -153,6 +160,8 @@ class Example(QtGui.QWidget):
     def buttonClearClicked(self):
         mouse_interface.clear()
 
+    def buttonSaveClicked(self):
+        mouse_interface.save()
 
     def buttonClicked(self):
         self.plot()

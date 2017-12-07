@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 plt.rcParams['lines.linewidth'] = 4
+plt.rcParams['xtick.labelsize'] = 14
+plt.rcParams['ytick.labelsize'] = 14
+
 ax = {}
 
 o_X_ = {}
@@ -64,6 +67,10 @@ def plot_data(data, variables_selected, topics_selected):
     fig.canvas.mpl_connect('motion_notify_event', dragZoom)
     fig.canvas.mpl_connect('button_press_event', dragZoom)
     fig.canvas.mpl_connect('button_release_event', dragZoom)
+
+def save():
+    #fig = plt.figure(1)
+    plt.savefig('plot.png')
 
 def turnOnKey(event):
     global shift_hold
