@@ -17,7 +17,7 @@ On GUI:
 
 Examples:
 ------------------
-<img src="./samples/gui.png" width="256"> <img src="./samples/plot.png" width="256">
+<img src="./samples/gui.png" height="256"> <img src="./samples/plot.png" height="256">
 
 
 Basic feature list:
