@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 
 import rosbag
 import rospy
@@ -60,7 +60,7 @@ def update_odometry(data, topic, msg):
                msg.pose.pose.orientation.z, msg.pose.pose.orientation.w]
        [r, p, y] = euler_from_quaternion(quat)
 
-       if data.has_key(topic):
+       if topic in data:
            data[topic]['x'] = np.append(data[topic]['x'], msg.pose.pose.position.x)
            data[topic]['y'] = np.append(data[topic]['y'], msg.pose.pose.position.y)
            data[topic]['z'] = np.append(data[topic]['z'], msg.pose.pose.position.z)
@@ -96,7 +96,7 @@ def update_pose(data, topic, msg, header):
                msg.orientation.z, msg.orientation.w]
        [r, p, y] = euler_from_quaternion(quat)
 
-       if data.has_key(topic):
+       if topic in data:
            data[topic]['x'] = np.append(data[topic]['x'], msg.position.x)
            data[topic]['y'] = np.append(data[topic]['y'], msg.position.y)
            data[topic]['z'] = np.append(data[topic]['z'], msg.position.z)
@@ -122,7 +122,7 @@ def update_imu(data, topic, msg):
                msg.orientation.z, msg.orientation.w]
        [r, p, y] = euler_from_quaternion(quat)
 
-       if data.has_key(topic):
+       if topic in data:
            data[topic]['acc_x'] = np.append(data[topic]['acc_x'], msg.linear_acceleration.x)
            data[topic]['acc_y'] = np.append(data[topic]['acc_y'], msg.linear_acceleration.y)
            data[topic]['acc_z'] = np.append(data[topic]['acc_z'], msg.linear_acceleration.z)
@@ -148,7 +148,7 @@ def update_imu(data, topic, msg):
        return data
 
 def update_pose_cmd(data, topic, msg):
-       if data.has_key(topic):
+       if topic in data:
            data[topic]['x'] = np.append(data[topic]['x'], msg.position.x)
            data[topic]['y'] = np.append(data[topic]['y'], msg.position.y)
            data[topic]['z'] = np.append(data[topic]['z'], msg.position.z)
@@ -177,7 +177,7 @@ def update_pose_cmd(data, topic, msg):
 
 
 def update_trpy_cmd(data, topic, msg):
-       if data.has_key(topic):
+       if topic in data:
            data[topic]['roll'] = np.append(data[topic]['roll'], msg.roll)
            data[topic]['pitch'] = np.append(data[topic]['pitch'], msg.pitch)
            data[topic]['yaw'] = np.append(data[topic]['yaw'], msg.yaw)
@@ -195,7 +195,7 @@ def update_so3_cmd(data, topic, msg):
             msg.orientation.z, msg.orientation.w]
        [r, p, y] = euler_from_quaternion(quat)
 
-       if data.has_key(topic):
+       if topic in data:
            data[topic]['yaw'] = np.append(data[topic]['yaw'], y)
            data[topic]['ang_vel_x'] = np.append(data[topic]['ang_vel_x'], msg.angular_velocity.x)
            data[topic]['ang_vel_y'] = np.append(data[topic]['ang_vel_y'], msg.angular_velocity.y)
@@ -216,7 +216,7 @@ def update_so3_cmd(data, topic, msg):
            data[topic]['yaw'] = np.array([y])
        return data
 def update_range(data, topic, msg):
-       if data.has_key(topic):
+       if topic in data:
            data[topic]['z'] = np.append(data[topic]['z'], msg.range)
            data[topic]['t'] = np.append(data[topic]['t'], msg.header.stamp.to_sec())
        else:

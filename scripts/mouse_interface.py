@@ -51,14 +51,14 @@ def plot_data(data, variables_selected, topics_selected):
 
         k += 1
         for topic in topics_selected:
-            if data[topic].has_key(var):
+            if var in data[topic]:
              ax[var].plot(data[topic]['t']-data[topic]['t'][0], data[topic][var], label=topic+"/"+var)
              ax[var].legend(bbox_to_anchor=(0.3, 0.9))
         if not verticalLineX_ == None:
              drawVerticalLine(ax[var])
         if not cur_xlim_ == None:
              drawZoomX(ax[var], cur_xlim_)
-        if cur_ylim_.has_key(var):
+        if var in cur_ylim_:
              drawZoomY(ax[var], cur_ylim_[var])
     fig.canvas.mpl_connect('button_press_event', onClick)
     fig.canvas.mpl_connect('scroll_event', reZoom)
