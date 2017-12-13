@@ -11,7 +11,6 @@ topic_type_dict = {}
 msg_types = ['nav_msgs/Odometry', 'sensor_msgs/Imu', 'geometry_msgs/PoseStamped',
         'quadrotor_msgs/PositionCommand', 'quadrotor_msgs/TRPYCommand',
         'quadrotor_msgs/SO3Command', 'sensor_msgs/Range',
-        'quadrotor_msgs/SafeCommand',
         'geometry_msgs/PoseWithCovarianceStamped']
 var_types = ['x', 'y', 'z', 'vx', 'vy', 'vz',
         'acc_x', 'acc_y', 'acc_z',
@@ -50,8 +49,6 @@ def read_msg(topics):
                 data = update_range(data, topic, msg)
             elif topic_type_dict[topic] == 'geometry_msgs/PoseWithCovarianceStamped':
                 data = update_pose(data, topic, msg.pose.pose, msg.header)
-            elif topic_type_dict[topic] == 'quadrotor_msgs/SafeCommand':
-                data = update_so3_cmd(data, topic, msg)
 
     return data
 

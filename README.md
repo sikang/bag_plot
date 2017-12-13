@@ -1,4 +1,4 @@
-bag_plot
+Bag Plot
 ==========
 A python script for plotting ros bag file, replacement of [rxbag](http://wiki.ros.org/rxbag) for ros version higher than groovy
 Basic use instruction:
@@ -10,8 +10,9 @@ $rosrun bag_plot interface.py *.bag
 On GUI:
 * Check topics to select corresponding msg
 * Check variables to select values to plot
-* Click Load to plot, the first time for load will take a while
-* Click Clear to reset figure params
+* Click `Load` to plot, the first time for load will take a while
+* Click `Clear` to reset figure params
+* Click `Save` to save current plot as `jpg` image
 
 Basic feature list:
 ------------------
@@ -23,6 +24,11 @@ Basic feature list:
  
 Msgs supported:
 ------------------
-* nav_msgs/Odometry
-* sensor_msgs/Imu
-* geometry_msgs/PoseStamped
+* nav\_msgs/Odometry
+* sensor\_msgs/Imu
+* geometry\_msgs/PoseStamped
+* quadrotor\_msgs/PositionCommand
+* quadrotor\_msgs/TRPYCommand
+* quadrotor\_msgs/SO3Command
+* geometry\_msgs/PoseWithCovarianceStamped
+* sensor\_msgs/Range
