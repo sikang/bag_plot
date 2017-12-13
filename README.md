@@ -17,8 +17,8 @@ On GUI:
 
 Examples:
 ------------------
-|<img src="./samples/gui.png" height="256"> | <img src="./samples/plot.png" height="256">|
-|*GUI*| *Saved `plot.png`*|
+<img src="./samples/gui.png" height="256"> | <img src="./samples/plot.png" height="256">
+*GUI* | *Saved `plot.png`*
 
 
 Basic feature list:
