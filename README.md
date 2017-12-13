@@ -5,14 +5,19 @@ Basic use instruction:
 --------------------
 On terminal:
 ```
-$rosrun bag_plot interface.py *.bag
+$rosrun bag_plot read_bag.py /path/to/bag/xxx.bag
 ```
 On GUI:
 * Check topics to select corresponding msg
 * Check variables to select values to plot
 * Click `Load` to plot, the first time for load will take a while
 * Click `Clear` to reset figure params
-* Click `Save` to save current plot as `jpg` image
+* Click `Save Figure` to save current plot as `plot.png` in the current folder
+
+Examples:
+------------------
+<img src="./samples/gui.png" width="256"> <img src="./samples/plot.png" width="256">
+
 
 Basic feature list:
 ------------------
