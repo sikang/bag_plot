@@ -10,5 +10,5 @@ catkin_package(
   LIBRARIES
 )
 
-catkin_install_python(PROGRAMS scripts/bag_reader.py scripts/interface.py scripts/mouse_interface.py
+catkin_install_python(PROGRAMS scripts/bag_reader.py scripts/mouse_interface.py
                       DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
